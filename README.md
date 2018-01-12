@@ -1,1 +1,1 @@
-"# MIVS" 
+# Mokymo Įstaigos Valdymo Sistema
