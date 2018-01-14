@@ -43,8 +43,8 @@
     + matyti visų kursų sąrašą
     + matyti užsiregistruotų kursų sąrašą
     + užsiregistruoti į kursą kai:
-            + kurso startDate yra ankstenė už dabatinę
-            + bendra užseregistuotų kursų kreditų suma mažesnė us 12
+        + kurso startDate yra ankstenė už dabatinę
+        + bendra užseregistuotų kursų kreditų suma mažesnė us 12
 
 + Vartotojai su lecturer role gali:
         matyti jam priskirtus kursus
