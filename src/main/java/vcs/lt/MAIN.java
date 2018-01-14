@@ -2,6 +2,7 @@ package vcs.lt;
 
 import vcs.lt.interfaces.AdminUserInterface;
 import vcs.lt.interfaces.LecturerUserInterface;
+import vcs.lt.interfaces.StudentUserInterface;
 import vcs.lt.interfaces.UserInterface;
 import vcs.lt.model.User;
 import vcs.lt.service.UserService;
@@ -15,18 +16,19 @@ public class MAIN {
         switch (user.getRole()) {
             case ADMIN: {
                 userInterface = new AdminUserInterface();
-                userInterface.openMainMenu(user);
+                break;
             }
             case LECTURER: {
                 userInterface = new LecturerUserInterface();
-                userInterface.openMainMenu(user);
+                break;
             }
-//            case STUDENT: {
-//                userInterface = new StudentUserInterface();
-//            }
+            case STUDENT: {
+                userInterface = new StudentUserInterface();
+                break;
+            }
         }
+        userInterface.openMainMenu(user);
 
-//        userInterface.openMainMenu(user);
 
     }
 
