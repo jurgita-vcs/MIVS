@@ -2,10 +2,11 @@ package vcs.lt.interfaces;
 
 import vcs.lt.model.*;
 import vcs.lt.utils.IOObjectStreamUtils;
+import vcs.lt.utils.ScannerUtils;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class AdminUserInterface implements UserInterface {
@@ -17,154 +18,175 @@ public class AdminUserInterface implements UserInterface {
 
     Scanner scanner = new Scanner(System.in);
 
-    HashMap<String, User> users = new HashMap<>();
-    User student = new Student(userName, firstName, secondName, password, Role.STUDENT);
-
     @Override
     public void openMainMenu(User user) {
 
         this.adminUser = (Admin) user;
 
         System.out.println("Hello, " + adminUser.getFirstName() + " " + adminUser.getSecondName());
-        //ScannerUtils.scanString();
-        adminMenu();
         adminChoises();
     }
 
     private void adminMenu() {
         System.out.println("----Administration menu----");
-        System.out.println("1. Register lecturer");
-        System.out.println("2. Register student");
-        System.out.println("3. Register course");
+        System.out.println("1. Register -lecturer-");
+        System.out.println("2. Register -student-");
+        System.out.println("3. Register -course-");
         System.out.println("4. Lecturers information");
         System.out.println("5. Students information");
-        System.out.println("6. Courses information");
-        System.out.println("7. Logout");
+        System.out.println("6. Add -course-");
+        System.out.println("7. Courses information");
+        System.out.println("8. Logout");
+        System.out.println();
     }
 
     public void adminChoises() {
+        adminMenu();
         System.out.print("Please, enter your menu choise: ");
-        int adminMenuChoise = scanner.nextInt();
+        int adminMenuChoise = ScannerUtils.checkValidScan(1, 8);
         switch (adminMenuChoise){
             case 1: {
                 addLecturer();
-                adminMenu();
                 adminChoises();
                 break;
             }
             case 2: {
                 addStudent();
-                adminMenu();
                 adminChoises();
                 break;
             }
             case 3: {
                 addCourse();
-                adminMenu();
                 adminChoises();
                 break;
             }
             case 4: {
                 lecturersInfo();
-                adminMenu();
                 adminChoises();
                 break;
             }
             case 5: {
                 studentInfo();
-                adminMenu();
                 adminChoises();
                 break;
             }
             case 6: {
-                courseInfo();
-                adminMenu();
+                addCourse();
                 adminChoises();
                 break;
             }
             case 7: {
+                courseInfo();
+                adminChoises();
+                break;
+            }
+            case 8: {
+                System.out.println("Bye bye.");
+                System.out.println();
                 break;
             }
         }
     }
 
     private void courseInfo() {
+        try {
+            HashMap<String, Course> courses = (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("users");
+            int nr = 0;
 
+            System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Course Code", "Title", "Started Date", "Credits");
+            for (Course course : courses.values()) {
+                nr += 1;
+                System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, course.getCourseCode(), course.getTittle(), course.getStartDate(), course.getCredit());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
     }
 
     private void addCourse() {
+        String courseCode = ScannerUtils.scanString("Enter COURSE CODE");
+        String courseTitle = ScannerUtils.scanString("Enter TITLE");
+        String courseDescription = ScannerUtils.scanString("Enter DESCRIPTION");
+        LocalDate courseStartDate = LocalDate.parse(ScannerUtils.scanString("Enter start date (yyyy-mm-dd)"));
+        int courseCredits = ScannerUtils.scanInt("Enter CREDITS");
+
+        HashMap<String, Course> courses = new HashMap<>();
+        courses.put(courseCode, new Course(courseCode, courseTitle, courseDescription, courseStartDate, courseCredits));
+        IOObjectStreamUtils.writeObjectToFile("users", courses);
+
+        System.out.println("Course registration complete.");
+        System.out.println();
 
     }
 
-    public void addLecturer() {
-        System.out.print("Enter USERNAME: ");
-        userName = scanner.next();
-        System.out.print("Enter FIRST NAME: ");
-        firstName = scanner.next();
-        System.out.print("Enter SECOND NAME: ");
-        secondName = scanner.next();
-        System.out.print("Enter PASSWORD: ");
-        password = scanner.next();
+    private void addLecturer() {
+        userName = ScannerUtils.scanString("Enter USERNAME: ");
+        firstName = ScannerUtils.scanString("Enter FIRST NAME: ");
+        secondName = ScannerUtils.scanString("Enter SECOND NAME: ");
+        password = ScannerUtils.scanString("Enter PASSWORD: ");
 
         try {
             HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-            users.put("lecturer", new Lecturer(userName, firstName, secondName, password, Role.LECTURER));
+            users.put(userName, new Lecturer(userName, firstName, secondName, password));
             IOObjectStreamUtils.writeObjectToFile("users", users);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
+        System.out.println("Lecturer registration complete.");
+        System.out.println();
+
     }
 
-    public void addStudent() {
+    private void addStudent() {
+        userName = ScannerUtils.scanString("Enter USERNAME: ");
+        firstName = ScannerUtils.scanString("Enter FIRST NAME: ");
+        secondName = ScannerUtils.scanString("Enter SECOND NAME: ");
+        password = ScannerUtils.scanString("Enter PASSWORD: ");
+
         HashMap<String, User> users = new HashMap<>();
-        System.out.print("Enter USERNAME: ");
-        userName = scanner.next();
-        System.out.print("Enter FIRST NAME: ");
-        firstName = scanner.next();
-        System.out.print("Enter SECOND NAME: ");
-        secondName = scanner.next();
-        System.out.print("Enter PASSWORD: ");
-        password = scanner.next();
-
-        users.put("student", student);
+        users.put(userName, new Student(userName, firstName, secondName, password, Role.STUDENT));
         IOObjectStreamUtils.writeObjectToFile("users", users);
+
+        System.out.println("Student registration complete.");
+        System.out.println();
     }
 
-    public void lecturersInfo() {
+    private void lecturersInfo() {
         try {
             HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
             int nr = 0;
 
             System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Username", "Role", "First name", "Second Name");
-            for (Map.Entry<String, User> entry : users.entrySet()) {
-                User value = entry.getValue();
-                if (value.getRole().equals(Role.LECTURER)) {
+            for (User user : users.values()) {
+                if (user.getRole().equals(Role.LECTURER)) {
                     nr += 1;
-                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, value.getUserName(), value.getRole(), value.getFirstName(), value.getSecondName());
+                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, user.getUserName(), user.getRole(), user.getFirstName(), user.getSecondName());
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println();
     }
 
-    public void studentInfo() {
+    private void studentInfo() {
         try {
             HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
             int nr = 0;
 
             System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Username", "Role", "First name", "Second Name");
-            for (Map.Entry<String, User> entry : users.entrySet()) {
-                User value = entry.getValue();
-                if (value.getRole().equals(Role.STUDENT)) {
+            for (User user : users. values()) {
+                if (user.getRole().equals(Role.STUDENT)) {
                     nr += 1;
-                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, value.getUserName(), value.getRole(), value.getFirstName(), value.getSecondName());
+                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, user.getUserName(), user.getRole(), user.getFirstName(), user.getSecondName());
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println();
     }
 
 

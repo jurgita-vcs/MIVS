@@ -1,6 +1,7 @@
 package vcs.lt;
 
 import vcs.lt.model.Admin;
+import vcs.lt.model.Course;
 import vcs.lt.model.User;
 import vcs.lt.utils.IOObjectStreamUtils;
 
@@ -44,12 +45,24 @@ public class Application {
     }
 
     private static void initializeData() {
+        initUsers();
+        initCourses();
+    }
+
+
+    private static void initUsers() {
         HashMap<String, User> users = new HashMap<>();
-        users.put("admin", new Admin("admin", "Admin", "Admin", "admin"));
-        //Admin admin = new Admin("admin", "Super", "Admin", "admin");
+        //users.put("admin", new Admin("admin", "Admin", "Admin", "admin"));
+        Admin admin = new Admin("admin", "Admin", "Admin", "admin");
         //Student student = new Student("student", "Super", "Admin", "admin", "1");
-        //users.put(admin.getUserName(), admin);
+        users.put(admin.getUserName(), admin);
         //users.put(student.getUserName(), student);
         IOObjectStreamUtils.writeObjectToFile("users", users);
     }
+
+    private static void initCourses() {
+        HashMap<String, Course> courses = new HashMap<>();
+        IOObjectStreamUtils.writeObjectToFile("courses", courses);
+    }
+
 }

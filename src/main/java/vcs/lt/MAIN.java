@@ -12,22 +12,26 @@ public class MAIN {
         Application.initialize();
         UserInterface userInterface = null;
 
-        User user = UserService.login();
-        switch (user.getRole()) {
-            case ADMIN: {
-                userInterface = new AdminUserInterface();
-                break;
+        System.out.println();
+        while (true) {
+            User user = UserService.login();
+            switch (user.getRole()) {
+                case ADMIN: {
+                    userInterface = new AdminUserInterface();
+                    break;
+                }
+                case LECTURER: {
+                    userInterface = new LecturerUserInterface();
+                    break;
+                }
+                case STUDENT: {
+                    userInterface = new StudentUserInterface();
+                    break;
+                }
             }
-            case LECTURER: {
-                userInterface = new LecturerUserInterface();
-                break;
-            }
-            case STUDENT: {
-                userInterface = new StudentUserInterface();
-                break;
-            }
+            userInterface.openMainMenu(user);
         }
-        userInterface.openMainMenu(user);
+
 
 
     }

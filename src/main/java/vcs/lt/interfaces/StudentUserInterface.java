@@ -16,12 +16,10 @@ public class StudentUserInterface implements UserInterface {
     }
 
     private void studentMenu() {
-        System.out.println("----Lecturer menu----");
-        System.out.println("1. Change name");
-        System.out.println("2. Change surname");
-        System.out.println("3. Lecturers information");
-        System.out.println("4. Students information");
-        System.out.println("5. Exit");
+        System.out.println("----Student menu----");
+        System.out.println("1. Change first and second name");
+        System.out.println("2. Selected courses information");
+        System.out.println("3. Exit");
     }
 
 }
