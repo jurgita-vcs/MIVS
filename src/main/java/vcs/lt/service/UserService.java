@@ -11,9 +11,8 @@ public class UserService {
     public static User login() {
         System.out.println("Welcome! Please login.");
         while (true) {
-            //System.out.print("Username: ");
+            System.out.println();
             String username = ScannerUtils.scanString("Username: ");
-            //System.out.print("Password: ");
             String password = ScannerUtils.scanString("Password: ");
 
             User user = UserService.findUser(username);

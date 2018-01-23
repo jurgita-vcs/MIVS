@@ -31,9 +31,5 @@ public class MAIN {
             }
             userInterface.openMainMenu(user);
         }
-
-
-
     }
-
 }

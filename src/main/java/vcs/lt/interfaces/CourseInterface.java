@@ -12,7 +12,4 @@ public class CourseInterface implements UserInterface{
         this.course = (Course) course;
     }
 
-    public void courseMenu(){
-
-    }
 }

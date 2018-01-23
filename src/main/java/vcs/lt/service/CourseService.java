@@ -1,6 +1,7 @@
 package vcs.lt.service;
 
 import vcs.lt.model.Course;
+import vcs.lt.model.Lecturer;
 import vcs.lt.model.Role;
 import vcs.lt.model.User;
 import vcs.lt.utils.IOObjectStreamUtils;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 public class CourseService {
     private UserService userService = new UserService();
 
+
+
     public HashMap<String, Course> findAllCourses() {
         try {
             return (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("courses");
@@ -20,14 +23,15 @@ public class CourseService {
         }
     }
 
-    public void createCourse(String title, String description, LocalDate startDate, int credit, String userName) {
-        User user = userService.findUser(userName);
+
+    public void createCourse(String courseCode, String title, String description, LocalDate startDate, int credit, String username) {
+        User user = userService.findUser(username);
         if (user != null && user.getRole() != Role.LECTURER) {
             System.out.println("This user can not drive the course");
             return;
         }
-        Course course = new Course(title, description, startDate, credit, user.getUserName());
-       // ((Lecturer) user).addLeadLecture(course.getCourseCode());
+        Course course = new Course(courseCode, title, description, startDate, credit, user.getUserName());
+        ((Lecturer) user).addLeadLecture(course.getCourseCode());
         userService.save(user);
 
         HashMap<String, Course> allCourses = findAllCourses();

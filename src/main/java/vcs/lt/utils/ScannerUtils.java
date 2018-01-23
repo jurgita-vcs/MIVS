@@ -1,5 +1,10 @@
 package vcs.lt.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -33,4 +38,24 @@ public class ScannerUtils {
         }
     }
 
+    public static boolean checkValidDate(String enteredDate) {
+        DateTimeFormatter[] formatters = {
+                new DateTimeFormatterBuilder().appendPattern("yyyy")
+                        .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                        .toFormatter(),
+                new DateTimeFormatterBuilder().appendPattern("yyyy-MM")
+                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                        .toFormatter(),
+                new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd")
+                        .parseStrict().toFormatter()};
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                LocalDate.parse(enteredDate, formatter);
+                return true;
+            } catch (DateTimeParseException e) {
+            }
+        }
+        return false;
+    }
 }

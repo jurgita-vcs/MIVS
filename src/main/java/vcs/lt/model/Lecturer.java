@@ -1,8 +1,15 @@
 package vcs.lt.model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Lecturer extends User {
+
+    private List<String> leadLectures = new ArrayList<>();
+
     private String personalNumber;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     private String mobileNumber;
     private String gender;
@@ -13,48 +20,32 @@ public class Lecturer extends User {
     }
 
 
-    public String getPersonalNumber() {
-        return personalNumber;
+    public List<String> getLeadLectures() {
+        return leadLectures;
+    }
+
+    public void addLeadLecture(String lecturerCode) {
+        this.leadLectures.add(lecturerCode);
     }
 
     public void setPersonalNumber(String personalNumber) {
         this.personalNumber = personalNumber;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public void setAddress(String address) {

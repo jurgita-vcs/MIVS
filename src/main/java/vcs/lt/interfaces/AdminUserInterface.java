@@ -1,13 +1,13 @@
 package vcs.lt.interfaces;
 
 import vcs.lt.model.*;
+import vcs.lt.service.CourseService;
 import vcs.lt.utils.IOObjectStreamUtils;
 import vcs.lt.utils.ScannerUtils;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class AdminUserInterface implements UserInterface {
     private Admin adminUser;
@@ -16,72 +16,116 @@ public class AdminUserInterface implements UserInterface {
     private String secondName;
     private String password;
 
-    Scanner scanner = new Scanner(System.in);
-
     @Override
     public void openMainMenu(User user) {
-
         this.adminUser = (Admin) user;
 
         System.out.println("Hello, " + adminUser.getFirstName() + " " + adminUser.getSecondName());
-        adminChoises();
+        adminMenu();
     }
 
     private void adminMenu() {
-        System.out.println("----Administration menu----");
-        System.out.println("1. Register -lecturer-");
-        System.out.println("2. Register -student-");
-        System.out.println("3. Register -course-");
-        System.out.println("4. Lecturers information");
-        System.out.println("5. Students information");
-        System.out.println("6. Add -course-");
-        System.out.println("7. Courses information");
-        System.out.println("8. Logout");
         System.out.println();
-    }
+        System.out.println("----Administrator menu----");
+        System.out.println("1. Register/info LECTURER");
+        System.out.println("2. Register/info STUDENT");
+        System.out.println("3. Register/info COURSE");
+        System.out.println("4. Logout");
+        System.out.println();
 
-    public void adminChoises() {
-        adminMenu();
         System.out.print("Please, enter your menu choise: ");
-        int adminMenuChoise = ScannerUtils.checkValidScan(1, 8);
-        switch (adminMenuChoise){
+        int choise = ScannerUtils.checkValidScan(1, 4);
+        switch (choise) {
             case 1: {
-                addLecturer();
-                adminChoises();
+                lecturerMenu();
+                adminMenu();
                 break;
             }
             case 2: {
-                addStudent();
-                adminChoises();
+                studentMenu();
+                adminMenu();
                 break;
             }
             case 3: {
-                addCourse();
-                adminChoises();
+                courseMenu();
+                adminMenu();
                 break;
             }
             case 4: {
-                lecturersInfo();
-                adminChoises();
-                break;
-            }
-            case 5: {
-                studentInfo();
-                adminChoises();
-                break;
-            }
-            case 6: {
-                addCourse();
-                adminChoises();
-                break;
-            }
-            case 7: {
-                courseInfo();
-                adminChoises();
-                break;
-            }
-            case 8: {
                 System.out.println("Bye bye.");
+                break;
+            }
+        }
+    }
+
+    private void subMenu(String message) {
+        System.out.println();
+        System.out.println("Administrator ----" + message + " menu----");
+        System.out.println("1. Register -" + message + "-");
+        System.out.println("2. Information");
+        System.out.println("3. Exit");
+        System.out.println();
+    }
+
+    private void lecturerMenu() {
+        subMenu("Lecturer");
+        System.out.print("Please, enter your choice: ");
+        int menuChoice = ScannerUtils.checkValidScan(1, 3);
+        switch (menuChoice){
+            case 1: {
+                addLecturer();
+                lecturerMenu();
+                break;
+            }
+            case 2: {
+                lecturersInfo();
+                lecturerMenu();
+                break;
+            }
+            case 3: {
+                adminMenu();
+                System.out.println();
+                break;
+            }
+        }
+    }
+
+    private void studentMenu() {
+        subMenu("Student");
+        System.out.print("Please, enter your choice: ");
+        int menuChoice = ScannerUtils.checkValidScan(1, 3);
+        switch (menuChoice){
+            case 1: {
+                addStudent();
+                break;
+            }
+            case 2: {
+                studentInfo();
+                break;
+            }
+            case 3: {
+                adminMenu();
+                System.out.println();
+                break;
+            }
+        }
+    }
+
+    private void courseMenu() {
+        subMenu("Course");
+        System.out.print("Please, enter your choice: ");
+        int menuChoice = ScannerUtils.checkValidScan(1, 3);
+        switch (menuChoice){
+            case 1: {
+                addCourse();
+                break;
+            }
+            case 2: {
+                courseInfo();
+                break;
+            }
+            case 3: {
+                adminMenu();
                 System.out.println();
                 break;
             }
@@ -90,13 +134,13 @@ public class AdminUserInterface implements UserInterface {
 
     private void courseInfo() {
         try {
-            HashMap<String, Course> courses = (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("users");
+            HashMap<String, Course> courses = (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("courses");
             int nr = 0;
 
             System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Course Code", "Title", "Started Date", "Credits");
             for (Course course : courses.values()) {
                 nr += 1;
-                System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, course.getCourseCode(), course.getTittle(), course.getStartDate(), course.getCredit());
+                System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, course.getCourseCode(), course.getTitle(), course.getStartDate(), course.getCredit());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -105,19 +149,18 @@ public class AdminUserInterface implements UserInterface {
     }
 
     private void addCourse() {
-        String courseCode = ScannerUtils.scanString("Enter COURSE CODE");
-        String courseTitle = ScannerUtils.scanString("Enter TITLE");
-        String courseDescription = ScannerUtils.scanString("Enter DESCRIPTION");
-        LocalDate courseStartDate = LocalDate.parse(ScannerUtils.scanString("Enter start date (yyyy-mm-dd)"));
-        int courseCredits = ScannerUtils.scanInt("Enter CREDITS");
+        CourseService course = new CourseService();
+        String courseCode = ScannerUtils.scanString("Enter COURSE CODE: ");
+        String courseTitle = ScannerUtils.scanString("Enter TITLE: ");
+        String courseDescription = ScannerUtils.scanString("Enter DESCRIPTION: ");
+        LocalDate courseStartDate = LocalDate.parse(ScannerUtils.scanString("Enter start date (yyyy-mm-dd): "));
+        //ScannerUtils.checkValidDate(courseStartDate.toString());
 
-        HashMap<String, Course> courses = new HashMap<>();
-        courses.put(courseCode, new Course(courseCode, courseTitle, courseDescription, courseStartDate, courseCredits));
-        IOObjectStreamUtils.writeObjectToFile("users", courses);
+        String lecturerCode = userName;
+        int courseCredits = ScannerUtils.scanInt("Enter CREDITS: ");
+        course.createCourse(courseCode, courseTitle, courseDescription, courseStartDate, courseCredits, lecturerCode);
 
         System.out.println("Course registration complete.");
-        System.out.println();
-
     }
 
     private void addLecturer() {
@@ -133,10 +176,7 @@ public class AdminUserInterface implements UserInterface {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         System.out.println("Lecturer registration complete.");
-        System.out.println();
-
     }
 
     private void addStudent() {
@@ -150,7 +190,6 @@ public class AdminUserInterface implements UserInterface {
         IOObjectStreamUtils.writeObjectToFile("users", users);
 
         System.out.println("Student registration complete.");
-        System.out.println();
     }
 
     private void lecturersInfo() {
@@ -168,7 +207,6 @@ public class AdminUserInterface implements UserInterface {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println();
     }
 
     private void studentInfo() {
@@ -186,8 +224,6 @@ public class AdminUserInterface implements UserInterface {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println();
     }
-
 
 }

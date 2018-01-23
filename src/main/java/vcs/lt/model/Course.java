@@ -5,18 +5,19 @@ import java.time.LocalDate;
 
 public class Course implements Serializable {
     private String courseCode;
-    private String tittle;
+    private String title;
     private String description;
     private LocalDate startDate;
     private int credit;
-    private String lecturerCode;
+    private String usermane;
 
-    public Course(String courseCode, String tittle, String description, LocalDate startDate, int credit) {
+    public Course(String courseCode, String title, String description, LocalDate startDate, int credit, String usermane) {
         this.courseCode = courseCode;
-        this.tittle = tittle;
+        this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.credit = credit;
+        this.usermane = usermane;
     }
 
     public String getCourseCode() {
@@ -25,14 +26,6 @@ public class Course implements Serializable {
 
     public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
-    }
-
-    public String getTittle() {
-        return tittle;
-    }
-
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
     }
 
     public String getDescription() {
@@ -59,11 +52,19 @@ public class Course implements Serializable {
         this.credit = credit;
     }
 
-    public String getLecturerCode() {
-        return lecturerCode;
+    public String getTitle() {
+        return title;
     }
 
-    public void setLecturerCode(String lecturerCode) {
-        this.lecturerCode = lecturerCode;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUsermane() {
+        return usermane;
+    }
+
+    public void setUsermane(String usermane) {
+        this.usermane = usermane;
     }
 }

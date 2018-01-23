@@ -52,11 +52,9 @@ public class Application {
 
     private static void initUsers() {
         HashMap<String, User> users = new HashMap<>();
-        //users.put("admin", new Admin("admin", "Admin", "Admin", "admin"));
         Admin admin = new Admin("admin", "Admin", "Admin", "admin");
         //Student student = new Student("student", "Super", "Admin", "admin", "1");
         users.put(admin.getUserName(), admin);
-        //users.put(student.getUserName(), student);
         IOObjectStreamUtils.writeObjectToFile("users", users);
     }
 
