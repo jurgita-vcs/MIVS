@@ -1,28 +1,14 @@
 package vcs.lt.service;
 
-import vcs.lt.model.Course;
-import vcs.lt.model.Lecturer;
 import vcs.lt.model.Role;
 import vcs.lt.model.User;
-import vcs.lt.utils.IOObjectStreamUtils;
-
-import java.io.FileNotFoundException;
+import vcs.lt.service.db.CourseRepository;
 import java.time.LocalDate;
-import java.util.HashMap;
 
 public class CourseService {
+
     private UserService userService = new UserService();
-
-
-
-    public HashMap<String, Course> findAllCourses() {
-        try {
-            return (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("courses");
-        } catch (FileNotFoundException e) {
-            return null;
-        }
-    }
-
+    private CourseRepository courseRepository = new CourseRepository();
 
     public void createCourse(String courseCode, String title, String description, LocalDate startDate, int credit, String username) {
         User user = userService.findUser(username);
@@ -30,12 +16,14 @@ public class CourseService {
             System.out.println("This user can not drive the course");
             return;
         }
-        Course course = new Course(courseCode, title, description, startDate, credit, user.getUserName());
-        ((Lecturer) user).addLeadLecture(course.getCourseCode());
-        userService.save(user);
+        courseRepository.createCourse(courseCode, title, description, startDate, credit, username);
+    }
 
-        HashMap<String, Course> allCourses = findAllCourses();
-        allCourses.put(course.getCourseCode(), course);
-        IOObjectStreamUtils.writeObjectToFile("courses", allCourses);
+    public void selectCourse(String username) {
+        courseRepository.selectCourse(username);
+    }
+
+    public void viewAllCourses() {
+        courseRepository.viewAllCourses();
     }
 }

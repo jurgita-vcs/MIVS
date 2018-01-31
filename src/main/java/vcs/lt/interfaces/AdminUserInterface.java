@@ -1,13 +1,13 @@
 package vcs.lt.interfaces;
 
-import vcs.lt.model.*;
+import vcs.lt.model.Admin;
+import vcs.lt.model.Role;
+import vcs.lt.model.User;
 import vcs.lt.service.CourseService;
-import vcs.lt.utils.IOObjectStreamUtils;
+import vcs.lt.service.UserService;
 import vcs.lt.utils.ScannerUtils;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.HashMap;
 
 public class AdminUserInterface implements UserInterface {
     private Admin adminUser;
@@ -15,6 +15,9 @@ public class AdminUserInterface implements UserInterface {
     private String firstName;
     private String secondName;
     private String password;
+
+    private UserService userService = new UserService();
+    private CourseService courseService = new CourseService();
 
     @Override
     public void openMainMenu(User user) {
@@ -132,33 +135,17 @@ public class AdminUserInterface implements UserInterface {
         }
     }
 
-    private void courseInfo() {
-        try {
-            HashMap<String, Course> courses = (HashMap<String, Course>) IOObjectStreamUtils.readFirstObjectFromFile("courses");
-            int nr = 0;
-
-            System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Course Code", "Title", "Started Date", "Credits");
-            for (Course course : courses.values()) {
-                nr += 1;
-                System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, course.getCourseCode(), course.getTitle(), course.getStartDate(), course.getCredit());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println();
-    }
-
     private void addCourse() {
-        CourseService course = new CourseService();
+        String lecturerCode = ScannerUtils.scanString("Enter lecturer USERNAME: ");
         String courseCode = ScannerUtils.scanString("Enter COURSE CODE: ");
         String courseTitle = ScannerUtils.scanString("Enter TITLE: ");
         String courseDescription = ScannerUtils.scanString("Enter DESCRIPTION: ");
         LocalDate courseStartDate = LocalDate.parse(ScannerUtils.scanString("Enter start date (yyyy-mm-dd): "));
         //ScannerUtils.checkValidDate(courseStartDate.toString());
-
-        String lecturerCode = userName;
         int courseCredits = ScannerUtils.scanInt("Enter CREDITS: ");
-        course.createCourse(courseCode, courseTitle, courseDescription, courseStartDate, courseCredits, lecturerCode);
+        //lecturerCode = userName;
+
+        courseService.createCourse(courseCode, courseTitle, courseDescription, courseStartDate, courseCredits, lecturerCode);
 
         System.out.println("Course registration complete.");
     }
@@ -169,13 +156,8 @@ public class AdminUserInterface implements UserInterface {
         secondName = ScannerUtils.scanString("Enter SECOND NAME: ");
         password = ScannerUtils.scanString("Enter PASSWORD: ");
 
-        try {
-            HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-            users.put(userName, new Lecturer(userName, firstName, secondName, password));
-            IOObjectStreamUtils.writeObjectToFile("users", users);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        userService.createUser(firstName, secondName, userName, password, Role.LECTURER);
+
         System.out.println("Lecturer registration complete.");
     }
 
@@ -185,45 +167,20 @@ public class AdminUserInterface implements UserInterface {
         secondName = ScannerUtils.scanString("Enter SECOND NAME: ");
         password = ScannerUtils.scanString("Enter PASSWORD: ");
 
-        HashMap<String, User> users = new HashMap<>();
-        users.put(userName, new Student(userName, firstName, secondName, password, Role.STUDENT));
-        IOObjectStreamUtils.writeObjectToFile("users", users);
+        userService.createUser(firstName, secondName, userName, password, Role.STUDENT);
 
         System.out.println("Student registration complete.");
     }
 
     private void lecturersInfo() {
-        try {
-            HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-            int nr = 0;
-
-            System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Username", "Role", "First name", "Second Name");
-            for (User user : users.values()) {
-                if (user.getRole().equals(Role.LECTURER)) {
-                    nr += 1;
-                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, user.getUserName(), user.getRole(), user.getFirstName(), user.getSecondName());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        userService.selectUser(Role.LECTURER);
     }
 
     private void studentInfo() {
-        try {
-            HashMap<String, User> users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-            int nr = 0;
-
-            System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", "Nr.", "Username", "Role", "First name", "Second Name");
-            for (User user : users. values()) {
-                if (user.getRole().equals(Role.STUDENT)) {
-                    nr += 1;
-                    System.out.printf("%-3s %-10s %-10s %-15s %-15s\n", nr, user.getUserName(), user.getRole(), user.getFirstName(), user.getSecondName());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        userService.selectUser(Role.STUDENT);
     }
 
+    private void courseInfo() {
+        courseService.viewAllCourses();
+    }
 }

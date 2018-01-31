@@ -1,17 +1,15 @@
 package vcs.lt.model;
 
-import java.time.LocalDate;
-
 public class Student extends User {
 
     private String personalNumber;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private String email;
     private String mobileNumber;
     private String gender;
     private String address;
 
-    public Student(String userName, String firstName, String secondName, String password, Role userRole) {
+    public Student(String userName, String firstName, String secondName, String password) {
         super(userName, firstName, secondName, password, Role.STUDENT);
     }
 
@@ -19,7 +17,7 @@ public class Student extends User {
         this.personalNumber = personalNumber;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -1,13 +1,11 @@
 package vcs.lt;
 
-import vcs.lt.model.Admin;
-import vcs.lt.model.Course;
-import vcs.lt.model.User;
+import vcs.lt.service.db.CourseRepository;
+import vcs.lt.service.db.UserRepository;
 import vcs.lt.utils.IOObjectStreamUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 
 
 public class Application {
@@ -51,16 +49,16 @@ public class Application {
 
 
     private static void initUsers() {
-        HashMap<String, User> users = new HashMap<>();
-        Admin admin = new Admin("admin", "Admin", "Admin", "admin");
-        //Student student = new Student("student", "Super", "Admin", "admin", "1");
-        users.put(admin.getUserName(), admin);
-        IOObjectStreamUtils.writeObjectToFile("users", users);
+        UserRepository userRepository = new UserRepository();
+        userRepository.createTable();
+        if (userRepository.findByUserName("admin") == null) {
+            new UserRepository().createUser("admin", "admin", "admin", "admin", "ADMIN");
+        }
     }
 
     private static void initCourses() {
-        HashMap<String, Course> courses = new HashMap<>();
-        IOObjectStreamUtils.writeObjectToFile("courses", courses);
+        CourseRepository courseRepository = new CourseRepository();
+        courseRepository.createTable();
     }
 
 }

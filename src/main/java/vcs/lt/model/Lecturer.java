@@ -1,6 +1,5 @@
 package vcs.lt.model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ public class Lecturer extends User {
     private List<String> leadLectures = new ArrayList<>();
 
     private String personalNumber;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private String email;
     private String mobileNumber;
     private String gender;
@@ -32,7 +31,7 @@ public class Lecturer extends User {
         this.personalNumber = personalNumber;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

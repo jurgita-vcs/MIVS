@@ -14,7 +14,7 @@ public class MAIN {
 
         System.out.println();
         while (true) {
-            User user = UserService.login();
+            User user = new UserService().login();
             switch (user.getRole()) {
                 case ADMIN: {
                     userInterface = new AdminUserInterface();

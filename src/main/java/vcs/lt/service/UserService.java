@@ -1,21 +1,21 @@
 package vcs.lt.service;
 
+import vcs.lt.model.Role;
 import vcs.lt.model.User;
-import vcs.lt.utils.IOObjectStreamUtils;
+import vcs.lt.service.db.UserRepository;
 import vcs.lt.utils.ScannerUtils;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-
 public class UserService {
-    public static User login() {
+    private UserRepository userRepository = new UserRepository();
+
+    public User login() {
         System.out.println("Welcome! Please login.");
         while (true) {
             System.out.println();
             String username = ScannerUtils.scanString("Username: ");
             String password = ScannerUtils.scanString("Password: ");
 
-            User user = UserService.findUser(username);
+            User user = findUser(username);
             if (user != null
                     && username.equals(user.getUserName())
                     && password.equals(user.getPassword())) {
@@ -25,27 +25,25 @@ public class UserService {
         }
     }
 
-    public static User findUser(String username) {
-        HashMap<String, User> users;
-        try {
-            users = (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-            return users.get(username);
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+    public User findUser(String username) {
+        return userRepository.findByUserName(username);
     }
 
-    public void save(User user) {
-        HashMap<String, User> allUsers = findAllUsers();
-        allUsers.put(user.getUserName(), user);
-        IOObjectStreamUtils.writeObjectToFile("users", allUsers);
+    public void createUser(String firstName, String secondName, String userName, String password, Role role) {
+        userRepository.createUser(firstName, secondName, userName, password, role.toString());
     }
 
-    public HashMap<String, User> findAllUsers() {
-        try {
-            return (HashMap<String, User>) IOObjectStreamUtils.readFirstObjectFromFile("users");
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+    public void selectUser(Role role) {
+        userRepository.selectUser(role);
     }
+
+    public void changeName(String userName, String firstName, String secondName) {
+        userRepository.changeName(userName, firstName, secondName);
+    }
+
+    public void addAdditionalInformation(String userName, String personalNumber, String dateOfBirth, String email, String mobileNumber, String gender, String address) {
+        //userRepository.addAdditionalColumns();
+        userRepository.addAdditionalInformation(userName, personalNumber, dateOfBirth, email, mobileNumber, gender, address);
+    }
+
 }

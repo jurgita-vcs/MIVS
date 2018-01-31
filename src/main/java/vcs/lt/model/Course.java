@@ -9,15 +9,15 @@ public class Course implements Serializable {
     private String description;
     private LocalDate startDate;
     private int credit;
-    private String usermane;
+    private String username;
 
-    public Course(String courseCode, String title, String description, LocalDate startDate, int credit, String usermane) {
+    public Course(String courseCode, String title, String description, LocalDate startDate, int credit, String username) {
         this.courseCode = courseCode;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.credit = credit;
-        this.usermane = usermane;
+        this.username = username;
     }
 
     public String getCourseCode() {
@@ -61,10 +61,10 @@ public class Course implements Serializable {
     }
 
     public String getUsermane() {
-        return usermane;
+        return username;
     }
 
     public void setUsermane(String usermane) {
-        this.usermane = usermane;
+        this.username = usermane;
     }
 }
