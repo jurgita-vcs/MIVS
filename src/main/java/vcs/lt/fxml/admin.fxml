@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="381.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vcs.lt.fxml.AdminController">
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <children>
+      <MenuBar prefHeight="38.0" prefWidth="381.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Register">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Lecturer" />
+                  <MenuItem mnemonicParsing="false" text="Student" />
+                  <MenuItem mnemonicParsing="false" text="Course" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Information">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Lecturer" />
+                  <MenuItem mnemonicParsing="false" text="Student" />
+                  <MenuItem mnemonicParsing="false" text="Course" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="About" />
+        </menus>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </MenuBar>
+      <Label disable="true" layoutX="177.0" layoutY="114.0" text="Welcome" />
+   </children>
+</Pane>
